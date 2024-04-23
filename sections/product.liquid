@@ -274,7 +274,32 @@
                           </script>
                     </div>
 
+                    <style>
+                      .skeleton-loading {
+                        animation-duration: 1.25s;
+                        animation-fill-mode: forwards;
+                        animation-iteration-count: infinite;
+                        animation-name: placeHolderShimmer;
+                        animation-timing-function: linear;
+                        background: #f6f6f6;
+                        background: linear-gradient(to right, #f6f6f6 8%, #f0f0f0 18%, #f6f6f6 33%);
+                        background-size: 1000px 104px;
+                        min-height: 60px;
+                        position: relative;
+                      }
+                    
+                      @keyframes placeHolderShimmer {
+                        0% {
+                          background-position: -468px 0;
+                        }
+                        100% {
+                          background-position: 468px 0;
+                        }
+                      }
+                    </style>
+
                     <span class="addToCart test2">
+                     <div class="skeleton-loading" style="height: 60px; margin-top: 5px;"></div>
                      <button  onclick="ga('send', 'event', 'Shopping Bag', 'Add Click', '{{ product.title }}');"
                             type="submit"
                             name="add"
@@ -290,6 +315,27 @@
                             </span>
                          
                                       </button>
+                                      <script>
+                                        window.skeleton_loading_helper = function(timeout){
+                                          const add_to_cart_button = document.querySelector(".addToCart button[type='submit']");
+                                          if (add_to_cart_button) {
+                                            add_to_cart_button.style.display = "none";
+                  
+                                            window.add_to_cart_button_timeout = setTimeout(() => {
+                                              add_to_cart_button.style.display = "";
+                  
+                                              const skeleton_loading_elements = document.querySelectorAll(".skeleton-loading");
+                                              skeleton_loading_elements.forEach(skeleton_loading_element => {
+                                                skeleton_loading_element.style.display = "none";
+                                              });
+                  
+                                              clearTimeout(window.add_to_cart_button_timeout);
+                                            }, 1000 * timeout);
+                                          }
+                                        }
+                
+                                        window.skeleton_loading_helper(5);
+                                      </script>
                      
                         
                         {% if product.title contains "Minimax Online Gift Card" %}
@@ -329,6 +375,7 @@
                               data-hodv="{{ product.has_only_default_variant }}"
                               style="display: none; width: 0;">
                             </div>
+                            <div class="skeleton-loading" style="height: 191px;"></div>
                             <div id="brauz-find-in-store-product-page"></div>
                             
                             {% if section.settings.show_delivery_estimator and product.metafields.marketplacer.marketplacer_details != blank %}
